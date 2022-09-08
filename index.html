@@ -10,8 +10,8 @@
 	<meta name="keywords" content="King Gizzard and The Lizard Wizard, gizz, gizzverse, gator gang">
 	
 	<meta property="og:title" content="King Gizzard Countdown" />
-	<meta property="og:url" content="http://gizzcountdown.online" />
-	<meta property="og:image" content="http://gizzcountdown.online/card.png" />
+	<meta property="og:url" content="https://gizzcountdown.online" />
+	<meta property="og:image" content="https://mrgan.com/gizzcountdown/images/card.png" />
 	<meta property="og:image:width" content="500" />
 	<meta property="og:image:height" content="250" />
 	<meta property="og:description" content="Countdown to the next event or release from King Gizzard and The Lizard Wizard" />
@@ -20,27 +20,494 @@
 	<meta name="twitter:creator" content="@mrgan">
 	<meta name="twitter:title" content="King Gizzard Countdown">
 	<meta name="twitter:description" content="Countdown to the next event or release from King Gizzard and The Lizard Wizard">
-	<meta name="twitter:image" content="http://gizzcountdown.online/card.png">
+	<meta name="twitter:image" content="https://mrgan.com/gizzcountdown/images/card.png">
 	
-	<link rel="apple-touch-icon-precomposed" href="icon.png" />
-	<link rel="icon" type="image/png" href="icon-small.png">
+	<link rel="apple-touch-icon-precomposed" href="images/icon.png" />
+	<link rel="icon" type="image/png" href="images/icon-small.png">
 		
 	<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+	
+	<link rel="preconnect" href="https://fonts.googleapis.com"> 
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+	<link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&display=swap" rel="stylesheet">
+	
+	<style>
+	
+	:root
+	{
+		--page-bg: #e8e8e8;
+		--text: #515151;
+		--bright-bg: white;
+	}
+	
+	body
+	{
+		background-color: var(--page-bg);
+		color: var(--text);
+	
+		font-size: 70%;	
+		font-family: 'Homemade Apple', cursive;
+		
+		padding-top: 2vh;
+	}
+	
+	main.hidden
+	{
+		visibility: hidden;
+	}
+	
+	h1
+	{
+		color: transparent;
+		text-indent: -9999px;
+
+		position: relative;
+		height: 6em;
+		margin-bottom: 1em;
+
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: contain;
+		background-image: url('images/clock1.png');
+	}
+	
+	a
+	{
+		color: inherit;
+	}
+	
+	.eventRow
+	{
+		/* outline: 1px solid green; */
+	}
+	
+	.desc
+	{
+		font-size: 2em;
+		line-height: 1.5em;
+		margin-bottom: -.5em;
+	}
+	.counter
+	{
+		display: inline-block;		
+		margin-bottom: 2em;
+	}	
+	.exactDateDisplay
+	{
+		display: none;
+		font-size: 2em;
+		padding: .2em 1em .05em 1em;
+		margin: .75em 0;
+		/* background: var(--bright-bg); */
+		border-radius: .5em;
+		border: .05em dotted var(--text);
+	}
+	.exactDate .exactDateDisplay
+	{
+		display: inline-block;
+	}
+	.exactDate .counter
+	{
+		display: none;
+	}
+	
+	#countdownCounters
+	{
+		text-align: center;
+	}
+	#countdownCounters.hidden
+	{
+		display: none;
+	}
+	
+	.num
+	{
+		color: transparent;
+		text-indent: -9999px;
+		
+		display: inline-block;
+		position: relative;
+		font-size: 2em;
+		width: 1.5em;
+		height: 3em;		
+		/* outline: 1px solid orange; */
+		
+		/* background-color: yellow; */
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: contain;
+	}
+	.num0 { background-image: url('images/num0.png'); }
+	.num1 { background-image: url('images/num1.png'); }
+	.num2 { background-image: url('images/num2.png'); }
+	.num3 { background-image: url('images/num3.png'); }
+	.num4 { background-image: url('images/num4.png'); }
+	.num5 { background-image: url('images/num5.png'); }
+	.num6 { background-image: url('images/num6.png'); }
+	.num7 { background-image: url('images/num7.png'); }
+	.num8 { background-image: url('images/num8.png'); }
+	.num9 { background-image: url('images/num9.png'); }
+	.separator
+	{
+		background-image: url('images/numSeparator.png');
+	}
+	
+	.numDays,
+	a .numDays
+	{
+		color: inherit;
+		text-indent: 0;
+		width: 3em;		
+		height: 2em;
+		position: relative;
+		top: .7em;
+		margin-left: .25em;
+		/* outline: 1px solid red; */
+	}
+	
+	.numToday
+	{
+		background-image: url('images/numToday.png');
+		/* outline: 1px solid red; */
+		width: 7em;
+	}
+	
+	#noEvents
+	{
+		font-size: 2em;
+		text-align: center;
+		display: none;
+	}
+	#noEvents.shown
+	{
+		display: block;
+	}
+	
+	.smaller
+	{
+		font-size: 80%;
+	}
+	
+	.wiggle
+	{
+		animation: wiggle .8s steps(3) infinite;
+	}
+	@keyframes wiggle
+	{		
+		from {
+			transform: translate(.05em, -.03em) rotate(-10deg) scale(.96);
+		}
+		to {
+			transform: translate(-.02em, -.03em) rotate(10deg) scale(1.02);
+		}
+	}
+	
+	/* Desktop scale */
+	@media screen and (min-width: 640px)
+	{
+		body
+		{
+			font-size: 1em;	
+			padding-top: 6vh;
+		}
+	}
+	
+	@media (prefers-color-scheme: dark)
+	{
+		:root
+		{
+			--page-bg: #000000;
+			--text: #e8e8e8;
+			--bright-bg: black;
+		}
+	}
+	
+	</style>
+	
 </head>
 
-<body class="">
+<body class="" onload="init()">
   
 	<header>
 		
-		<h1>
-			Countdown
+		<h1 id="title">
+			Gizz Countdown
 		</h1>    	
 			
 	</header>
 	
-	<main>
+	<main id="content" class="hidden">
 		
+		<div id="countdownCounters"></div>
+		
+		<div id="noEvents">
+			…no upcoming events…
+			<br />
+			<a href="https://www.reddit.com/r/KGATLW/">check the reddit</a>
+		</div>
 		
 	</main>
 </body>
+
+<script>
+
+var t; // interval
+
+// Events to track
+var countdownEvents = []
+
+// Melbourne, AU is GMT+1000
+
+countdownEvents.push({
+	"date": new Date("Oct 7 2022 21:00:00 GMT+1000"),
+	"desc": "<span class=\"smaller\">Ice, Death, Planets, Lungs, Mushrooms And Lava</span>",
+	"precision": "day",
+	"url": "https://kinggizzard.bandcamp.com/album/ice-death-planets-lungs-mushrooms-and-lava",
+	"active": true
+});
+countdownEvents.push({
+	"date": new Date("Oct 12 2022 09:00:00 GMT+1000"),
+	"desc": "Laminated Denim",
+	"precision": "day",
+	"url": "https://kinggizzard.bandcamp.com/album/laminated-denim",
+	"active": true
+});
+countdownEvents.push({
+	"date": new Date("Oct 28 2022 09:00:00 GMT+1000"),
+	"desc": "Changes",
+	"precision": "day",
+	"url": "https://kinggizzard.bandcamp.com/album/changes",
+	"active": true
+});
+
+// countdownEvents = []; // test no events
+
+var containers = [] 		// containers for each event's elements
+var descs = [] 				// description elements
+var dateElements = [] 	// actual countdownElements
+var countdownElements = [] 	// actual countdownElements
+
+// create html elements for each counter
+countdownEvents.forEach((element, index) =>
+{
+	// Container
+	containers[index] = document.createElement('div');
+	containers[index].className = 'eventRow';	
+	
+	// Description
+	descs[index] = document.createElement('div');
+	descs[index].className = 'desc';	
+	descs[index].innerHTML = countdownEvents[index].desc;
+	// make into a link if applicable
+	if (countdownEvents[index].url)
+	{
+		descs[index].innerHTML = '<a href="'+ countdownEvents[index].url +'">' + descs[index].innerHTML + '</a>';
+	}	
+	
+	// Date Display
+		
+	dateElements[index] = document.createElement('div');
+	dateElements[index].className = 'dateDisplay';	
+	dateElements[index].addEventListener('click', (event) =>
+	{
+		toggleDateDisplay(index);
+	});
+	
+	// animated countdown
+	countdownElements[index] = document.createElement('div');
+	countdownElements[index].className = 'counter';	
+	
+	// full absolute date
+	exactDateDisplay = document.createElement('div');
+	exactDateDisplay.className = 'exactDateDisplay';
+	exactDateDisplay.innerHTML = formattedTime(countdownEvents[index].date);
+	
+	// Add all	
+	dateElements[index].appendChild(countdownElements[index]);
+	dateElements[index].appendChild(exactDateDisplay);
+	
+	containers[index].appendChild(descs[index]);
+	containers[index].appendChild(dateElements[index]);
+	
+	document.getElementById('countdownCounters').appendChild(containers[index]);
+});
+
+var activeCounters = countdownElements.length;
+
+function tick()
+{		 	
+	// wiggle the clock?
+	// document.getElementById('title').style = wiggleStyle();	
+	document.getElementById('title').style = 'transform: translate(' + ((Math.random()/30)+0.15) + 'em, ' + ((Math.random()/10)+0.05) + 'em) rotate(' + ((Math.random()*2)) + 'deg) scale(' + (((Math.random())/30)+.95) + ')';
+	
+	var now = new Date();
+	
+	countdownEvents.forEach((element, index) =>
+	{	
+		var container	= containers[index];
+		var event		= countdownEvents[index];
+		var element		= countdownElements[index];
+		
+		if (event.active)
+		{
+			var delta = event.date.getTime() - now.getTime();;
+			
+			var days    = Math.floor((delta / (1000 * 60 * 60 * 24)));
+			var hours   = Math.floor((delta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
+			var seconds = Math.floor((delta % (1000 * 60)) / 1000);
+			
+			element.innerHTML = '';
+			
+			if (event.precision == 'day')
+			{
+				// Day only
+				if (now.getDate() == event.date.getDate() && now.getMonth() == event.date.getMonth())
+				{
+					// today?
+					element.innerHTML = '<span class="num numToday" style="'+ wiggleStyle() +'">today!</span>';
+				}
+				else
+				{
+					// not today
+					element.innerHTML += cssNumber(days) + '<span class="num numDays">days</span>';
+				}
+			}
+			else
+			{
+				// second precision
+				// don't show the days if it's at 0; looks better this way
+				if (days > 0)
+				{
+					element.innerHTML += cssNumber(days) + '<span class="num separator" style="' + wiggleStyle() + '">:</span>';
+				}
+				// This is the dd:hh:mm:ss line we'll want for a proper countdown:
+				element.innerHTML += cssNumber(hours) + '<span class="num separator" title="'+ formattedTime(event.date) +'" style="'+ wiggleStyle() +'">:</span>'+ cssNumber(minutes) +'<span class="num separator" style="'+ wiggleStyle() +'">:</span>'+ cssNumber(seconds);
+			}			
+			
+			if (delta < 0 && event.precision != 'day')
+			{				
+				event.active = false; // counter finished, remove from list
+				container.remove(); // remove counter display
+				element.remove(); // remove counter display
+				descs[index].remove()     // remove label
+				
+				activeCounters--;			
+				
+				if (activeCounters <= 0)
+				{
+					// all countdownElements finished
+					clearInterval(t);
+					document.getElementById('noEvents').className = 'shown';
+					document.getElementById('countdownCounters').className = 'hidden';
+				}
+			}
+		}		
+	});		
+		
+}
+
+// Style as number as a series of spans with classes
+function cssNumber(n)
+{
+	// return n;
+	
+	var c = "" + n; // make into string
+	if (c.length < 2)
+	{
+		c = "0" + c;
+	}
+	
+	var output = "";
+	
+	for (var i = 0; i < c.length; i++)
+	{
+		var num = parseInt(c[i]);
+		output += '<span class="num num' + num + '" style="' + wiggleStyle() + '">' + num + '</span>';
+	}
+	
+	return output;
+}
+
+function formattedTime(d)
+{
+	var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+	var weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+	
+	var ft = weekdays[d.getDay()] +', '+ d.getDate() +' '+  months[d.getMonth()] +' '+ d.getFullYear();
+	return ft;	
+}
+
+function toggleDateDisplay(index)
+{
+	el = dateElements[index];
+	el.classList.toggle('exactDate');
+}
+
+function wiggleStyle()
+{
+	return 'transform: translate(' + ((Math.random()/30)+0.15) + 'em, ' + ((Math.random()/10)+0.05) + 'em) rotate(' + ((Math.random()*2)) + 'deg) scale(' + (((Math.random())/30)+.95) + ')';
+}
+
+function preloadImages(urls, allImagesLoadedCallback)
+{
+	var loadedCounter = 0;
+	var toBeLoadedNumber = urls.length;
+	urls.forEach(function(url)
+	{
+		preloadImage(url, function()
+		{
+			loadedCounter++;
+  			if (loadedCounter == toBeLoadedNumber)
+			{
+				allImagesLoadedCallback();
+  			}
+		});
+	});
+	
+	function preloadImage(url, anImageLoadedCallback)
+	{
+  		var img = new Image();
+  		img.onload = anImageLoadedCallback;
+  		img.src = url;
+	}
+}
+
+function init()
+{
+	preloadImages([
+		'images/num0.png',
+		'images/num1.png',
+		'images/num2.png',
+		'images/num3.png',
+		'images/num4.png',
+		'images/num5.png',
+		'images/num6.png',
+		'images/num7.png',
+		'images/num8.png',
+		'images/num9.png',
+		'images/numSeparator.png',
+		'images/clock1.png'
+	],
+	function()
+	{
+		// All images preloaded, show the countdowns…
+		console.log('All images loaded');
+		
+		tick(); // draw immediately once
+		t = setInterval(tick, 200); // update every 1 s
+		
+		document.getElementById('content').className = ''; // remove hidden class
+		
+		if (countdownElements.length <= 0)
+		{
+			document.getElementById('noEvents').className = 'shown';
+			document.getElementById('countdownCounters').className = 'hidden';
+		}
+	}
+	);
+}
+
+</script>
+
 </html>
