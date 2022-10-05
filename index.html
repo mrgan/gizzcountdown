@@ -38,6 +38,7 @@
 		--page-bg: #e8e8e8;
 		--text: #515151;
 		--bright-bg: white;
+		--subtle: #a1a1a1;
 	}
 	
 	body
@@ -84,23 +85,38 @@
 	.desc
 	{
 		font-size: 2em;
-		line-height: 1.5em;
+		line-height: 1.3em;
 		margin-bottom: -.5em;
 	}
+	.desc a
+	{
+		display: inline-block;
+		text-decoration-line: underline;
+		text-decoration-color: var(--subtle);
+		text-decoration-style: wavy;
+	}
+	
 	.counter
 	{
-		display: inline-block;		
-		margin-bottom: 2em;
-	}	
+		display: inline-block;
+		margin-bottom: 2em;		
+	}
+	.counter, .counter *
+	{
+		user-select: none;
+	}
 	.exactDateDisplay
 	{
 		display: none;
-		font-size: 2em;
-		padding: .2em 1em .05em 1em;
-		margin: .75em 0;
+		font-family: 'Input Mono', 'Menlo', 'Consolas', monospace;
+		font-size: 1.5em;
+		font-weight: 400;
+		line-height: 1.3em;
+		padding: .8em 1em .6em 1em;
+		margin: 1.26em 0;
 		/* background: var(--bright-bg); */
 		border-radius: .5em;
-		border: .05em dotted var(--text);
+		border: .08em dotted var(--subtle);		
 	}
 	.exactDate .exactDateDisplay
 	{
@@ -168,8 +184,12 @@
 	.numToday
 	{
 		background-image: url('images/numToday.png');
-		/* outline: 1px solid red; */
 		width: 7em;
+	}
+	.numTomorrow
+	{
+		background-image: url('images/numTomorrow.png');
+		width: 8em;
 	}
 	
 	#noEvents
@@ -202,6 +222,13 @@
 		}
 	}
 	
+	footer
+	{
+		margin-top: 1em;
+		text-align: center;
+		color: var(--subtle);
+	}
+	
 	/* Desktop scale */
 	@media screen and (min-width: 640px)
 	{
@@ -219,6 +246,7 @@
 			--page-bg: #000000;
 			--text: #e8e8e8;
 			--bright-bg: black;
+			--subtle: #666666;
 		}
 	}
 	
@@ -247,6 +275,11 @@
 		</div>
 		
 	</main>
+	
+	<footer>
+		Click the countdown to see the actual time	
+	</footer>
+	
 </body>
 
 <script>
@@ -284,12 +317,33 @@ countdownEvents.push({
 
 var containers = [] 		// containers for each event's elements
 var descs = [] 				// description elements
-var dateElements = [] 	// actual countdownElements
+var dateElements = [] 		// actual countdownElements
 var countdownElements = [] 	// actual countdownElements
+
+// remove events that don't qualify
+countdownEvents.forEach((element, index) =>
+{	
+	var event = countdownEvents[index];
+	var now = new Date();
+	var delta = event.date.getTime() - now.getTime();
+	
+	if (event.active &&
+		(delta > 0 || (event.precision == 'day' && event.date.getDate() == now.getDate() && now.getMonth() == event.date.getMonth()))
+		)
+	{}
+	else
+	{
+		countdownEvents.splice(index, 1);
+	}
+});
 
 // create html elements for each counter
 countdownEvents.forEach((element, index) =>
-{
+{	
+	var event = countdownEvents[index];
+	var now = new Date();
+	var delta = event.date.getTime() - now.getTime();
+
 	// Container
 	containers[index] = document.createElement('div');
 	containers[index].className = 'eventRow';	
@@ -301,7 +355,7 @@ countdownEvents.forEach((element, index) =>
 	// make into a link if applicable
 	if (countdownEvents[index].url)
 	{
-		descs[index].innerHTML = '<a href="'+ countdownEvents[index].url +'">' + descs[index].innerHTML + '</a>';
+		descs[index].innerHTML = '<a href="'+ countdownEvents[index].url +'">&nbsp;' + descs[index].innerHTML + '&nbsp;</a>';
 	}	
 	
 	// Date Display
@@ -316,6 +370,7 @@ countdownEvents.forEach((element, index) =>
 	// animated countdown
 	countdownElements[index] = document.createElement('div');
 	countdownElements[index].className = 'counter';	
+	countdownElements[index].title = formattedTime(countdownEvents[index].date);	
 	
 	// full absolute date
 	exactDateDisplay = document.createElement('div');
@@ -334,6 +389,9 @@ countdownEvents.forEach((element, index) =>
 
 var activeCounters = countdownElements.length;
 
+// console.log(countdownEvents);
+// console.log(countdownElements);
+
 function tick()
 {		 	
 	// wiggle the clock?
@@ -346,17 +404,17 @@ function tick()
 	{	
 		var container	= containers[index];
 		var event		= countdownEvents[index];
-		var element		= countdownElements[index];
+		var element		= countdownElements[index];		
 		
-		if (event.active)
-		{
-			var delta = event.date.getTime() - now.getTime();;
-			
-			var days    = Math.floor((delta / (1000 * 60 * 60 * 24)));
-			var hours   = Math.floor((delta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-			var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
-			var seconds = Math.floor((delta % (1000 * 60)) / 1000);
-			
+		var delta = event.date.getTime() - now.getTime();;
+		
+		var days    = Math.ceil((delta / (1000 * 60 * 60 * 24)));
+		var hours   = Math.floor((delta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+		var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
+		var seconds = Math.floor((delta % (1000 * 60)) / 1000);
+		
+		if (1==1)
+		{			
 			element.innerHTML = '';
 			
 			if (event.precision == 'day')
@@ -367,10 +425,15 @@ function tick()
 					// today?
 					element.innerHTML = '<span class="num numToday" style="'+ wiggleStyle() +'">today!</span>';
 				}
+				else if (now.getDate() == (event.date.getDate()-1) && now.getMonth() == event.date.getMonth())
+				{
+					// tomorrow?
+					element.innerHTML = '<span class="num numTomorrow" style="'+ wiggleStyle() +'">tomorrow!</span>';
+				}
 				else
 				{
 					// not today
-					element.innerHTML += cssNumber(days) + '<span class="num numDays">days</span>';
+					element.innerHTML += cssNumber(days, false) + '<span class="num numDays">'+plural('day', days)+'</span>';
 				}
 			}
 			else
@@ -379,7 +442,7 @@ function tick()
 				// don't show the days if it's at 0; looks better this way
 				if (days > 0)
 				{
-					element.innerHTML += cssNumber(days) + '<span class="num separator" style="' + wiggleStyle() + '">:</span>';
+					element.innerHTML += cssNumber(days, false) + '<span class="num separator" style="' + wiggleStyle() + '">:</span>';
 				}
 				// This is the dd:hh:mm:ss line we'll want for a proper countdown:
 				element.innerHTML += cssNumber(hours) + '<span class="num separator" title="'+ formattedTime(event.date) +'" style="'+ wiggleStyle() +'">:</span>'+ cssNumber(minutes) +'<span class="num separator" style="'+ wiggleStyle() +'">:</span>'+ cssNumber(seconds);
@@ -408,12 +471,12 @@ function tick()
 }
 
 // Style as number as a series of spans with classes
-function cssNumber(n)
+function cssNumber(n, zeroPad)
 {
 	// return n;
 	
 	var c = "" + n; // make into string
-	if (c.length < 2)
+	if (c.length < 2 && zeroPad)
 	{
 		c = "0" + c;
 	}
@@ -429,12 +492,20 @@ function cssNumber(n)
 	return output;
 }
 
+function plural(string, num)
+{
+	return string + (num > 1 ? 's' : '');
+}
+
 function formattedTime(d)
 {
 	var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 	var weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 	
-	var ft = weekdays[d.getDay()] +', '+ d.getDate() +' '+  months[d.getMonth()] +' '+ d.getFullYear();
+	var ft =
+		d.toLocaleTimeString() 
+		+ ', ' +
+		weekdays[d.getDay()] +', '+ d.getDate() +' '+  months[d.getMonth()] +' '+ d.getFullYear();
 	return ft;	
 }
 
@@ -492,7 +563,7 @@ function init()
 	function()
 	{
 		// All images preloaded, show the countdowns…
-		console.log('All images loaded');
+		// console.log('All images loaded');
 		
 		tick(); // draw immediately once
 		t = setInterval(tick, 200); // update every 1 s
