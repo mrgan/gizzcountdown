@@ -292,20 +292,6 @@ var countdownEvents = []
 // Melbourne, AU is GMT+1000
 
 countdownEvents.push({
-	"date": new Date("Oct 7 2022 8:00:00 GMT+1000"),
-	"desc": "<span class=\"smaller\">Ice, Death, Planets, Lungs, Mushrooms And Lava</span>",
-	"precision": "day",
-	"url": "https://kinggizzard.bandcamp.com/album/ice-death-planets-lungs-mushrooms-and-lava",
-	"active": true
-});
-countdownEvents.push({
-	"date": new Date("Oct 12 2022 8:00:00 GMT+1000"),
-	"desc": "Laminated Denim",
-	"precision": "day",
-	"url": "https://kinggizzard.bandcamp.com/album/laminated-denim",
-	"active": true
-});
-countdownEvents.push({
 	"date": new Date("Oct 28 2022 8:00:00 GMT+1000"),
 	"desc": "Changes",
 	"precision": "day",
@@ -330,7 +316,9 @@ countdownEvents.forEach((element, index) =>
 	if (event.active &&
 		(delta > 0 || (event.precision == 'day' && event.date.getDate() == now.getDate() && now.getMonth() == event.date.getMonth()))
 		)
-	{}
+	{
+		// console.log('Added ' + event.desc + '(' + delta + ')');
+	}
 	else
 	{
 		countdownEvents.splice(index, 1);
@@ -413,7 +401,7 @@ function tick()
 		var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
 		var seconds = Math.floor((delta % (1000 * 60)) / 1000);
 		
-		if (1==1)
+		if (1==1) // there used to be a check here…
 		{			
 			element.innerHTML = '';
 			
@@ -473,7 +461,11 @@ function tick()
 // Style as number as a series of spans with classes
 function cssNumber(n, zeroPad)
 {
-	// return n;
+	// eliminate bad numbers
+	if (n < 0)
+	{
+		return '';
+	}
 	
 	var c = "" + n; // make into string
 	if (c.length < 2 && zeroPad)
