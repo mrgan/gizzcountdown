@@ -131,7 +131,8 @@
 	{
 		text-align: center;
 	}
-	#countdownCounters.hidden
+	#countdownCounters.hidden,
+	footer.hidden
 	{
 		display: none;
 	}
@@ -276,8 +277,8 @@
 		
 	</main>
 	
-	<footer>
-		Click the countdown to see the actual time	
+	<footer id="hint">
+		Click the countdown to see your actual, local time	
 	</footer>
 	
 </body>
@@ -310,12 +311,12 @@ countdownEvents.push({
 	"active": true
 });
 
-// countdownEvents = []; // test no events
+countdownEvents = []; // test no events
 
-var containers = [] 		// containers for each event's elements
-var descs = [] 				// description elements
-var dateElements = [] 		// actual countdownElements
-var countdownElements = [] 	// actual countdownElements
+var containers = []; 			// containers for each event's elements
+var descs = []; 				// description elements
+var dateElements = []; 			// actual countdownElements
+var countdownElements = []; 	// actual countdownElements
 
 // remove events that don't qualify
 countdownEvents.forEach((element, index) =>
@@ -472,6 +473,7 @@ function tick()
 					clearInterval(t);
 					document.getElementById('noEvents').className = 'shown';
 					document.getElementById('countdownCounters').className = 'hidden';
+					document.getElementById('hint').className = 'hidden';
 				}
 			}
 		}		
@@ -587,6 +589,7 @@ function init()
 		{
 			document.getElementById('noEvents').className = 'shown';
 			document.getElementById('countdownCounters').className = 'hidden';
+			document.getElementById('hint').className = 'hidden';
 		}
 	}
 	);
