@@ -291,6 +291,17 @@ var countdownEvents = []
 
 // Melbourne, AU is GMT+1000
 
+var te = new Date();
+console.log(te.toString());
+
+countdownEvents.push({
+	"date": new Date("Sun Oct 17 2022 05:00:00 GMT-0700"),
+	"desc": "Hate Dancin'",
+	"precision": "second",
+	"url": "https://www.youtube.com/watch?v=JRF8Nko1EDY",
+	"active": true
+});
+
 countdownEvents.push({
 	"date": new Date("Oct 28 2022 8:00:00 GMT+1000"),
 	"desc": "Changes",
@@ -312,6 +323,8 @@ countdownEvents.forEach((element, index) =>
 	var event = countdownEvents[index];
 	var now = new Date();
 	var delta = event.date.getTime() - now.getTime();
+	
+	console.log(delta);
 	
 	if (event.active &&
 		(delta > 0 || (event.precision == 'day' && event.date.getDate() == now.getDate() && now.getMonth() == event.date.getMonth()))
@@ -396,7 +409,15 @@ function tick()
 		
 		var delta = event.date.getTime() - now.getTime();;
 		
-		var days    = Math.ceil((delta / (1000 * 60 * 60 * 24)));
+		var days = 0;
+		if (event.precision == 'day')
+		{
+			days = Math.ceil((delta / (1000 * 60 * 60 * 24)));
+		}
+		else
+		{
+			days = Math.floor((delta / (1000 * 60 * 60 * 24)));
+		}
 		var hours   = Math.floor((delta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 		var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
 		var seconds = Math.floor((delta % (1000 * 60)) / 1000);
@@ -433,7 +454,7 @@ function tick()
 					element.innerHTML += cssNumber(days, false) + '<span class="num separator" style="' + wiggleStyle() + '">:</span>';
 				}
 				// This is the dd:hh:mm:ss line we'll want for a proper countdown:
-				element.innerHTML += cssNumber(hours) + '<span class="num separator" title="'+ formattedTime(event.date) +'" style="'+ wiggleStyle() +'">:</span>'+ cssNumber(minutes) +'<span class="num separator" style="'+ wiggleStyle() +'">:</span>'+ cssNumber(seconds);
+				element.innerHTML += cssNumber(hours, true) + '<span class="num separator" title="'+ formattedTime(event.date) +'" style="'+ wiggleStyle() +'">:</span>'+ cssNumber(minutes, true) +'<span class="num separator" style="'+ wiggleStyle() +'">:</span>'+ cssNumber(seconds, true);
 			}			
 			
 			if (delta < 0 && event.precision != 'day')
