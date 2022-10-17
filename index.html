@@ -377,7 +377,7 @@ countdownEvents.forEach((element, index) =>
 	// full absolute date
 	exactDateDisplay = document.createElement('div');
 	exactDateDisplay.className = 'exactDateDisplay';
-	exactDateDisplay.innerHTML = formattedTime(countdownEvents[index].date);
+	exactDateDisplay.innerHTML = formattedTime(countdownEvents[index].date, countdownEvents[index].precision);
 	
 	// Add all	
 	dateElements[index].appendChild(countdownElements[index]);
@@ -512,15 +512,28 @@ function plural(string, num)
 	return string + (num > 1 ? 's' : '');
 }
 
-function formattedTime(d)
+function formattedTime(d, precision)
 {
+	if (precision === undefined)
+	{
+		precision = 'second';
+	}
+	
 	var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 	var weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 	
-	var ft =
+	if (precision == 'day')
+	{
+		ft = weekdays[d.getDay()] +', '+ d.getDate() +' '+  months[d.getMonth()] +' '+ d.getFullYear();
+	}
+	else
+	{	
+		ft =
 		d.toLocaleTimeString() 
 		+ ', ' +
 		weekdays[d.getDay()] +', '+ d.getDate() +' '+  months[d.getMonth()] +' '+ d.getFullYear();
+	}
+		
 	return ft;	
 }
 
